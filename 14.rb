@@ -1,19 +1,33 @@
-arr = [0, 1]
-i = 1
-while true
-	if arr[i] > 1000000 && arr[i].odd?
-		arr.delete(arr[i])
-	end
+timeStart = Time.now
+cache = [0,1]
 
-	if arr[i].even?
-		if (arr[i] - 1) % 3 == 0
-			arr << (arr[i] - 1) / 3
+def collatz_length(n, cache)
+	count = 0 
+	i = n;
+	while cache[i].nil?
+		if i.even?
+			i = i/2
 		else
-			arr << arr[i] * 2
+			i = 3*i + 1
 		end
-		i += 1
-	else
-		arr << arr[i] * 2
-		i +=1
+		count += 1	
+	end
+	count += cache[i]
+	cache[n] = count
+	count
+end
+
+maxNumber = 1
+collatzLength = 1
+
+(1..1000000).each do |n|
+	
+	currLength = collatz_length(n, cache)
+	if currLength > collatzLength
+		maxNumber = n
+		collatzLength = currLength
 	end
 end
+
+puts "#{maxNumber} with length #{collatzLength}"
+puts "took #{Time.now - timeStart}"
